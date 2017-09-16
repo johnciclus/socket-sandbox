@@ -12,11 +12,15 @@
     app.set("view engine", "ejs");
 
     io.on("connection", function (socket) {
-        process.stdout.write("\n Socket connected\n");
+        process.stdout.write("\n Socket stared\n");
+        socket.broadcast.emit('user connected', 'new user connected');
+        socket.join('room');
 
         socket.on("value", function(value){
+
             var reverse_message = value.message.split("").reverse().join("");
-            socket.emit("reverseValue", {"value": reverse_message})
+            console.log(reverse_message);
+            io.to('room').emit("reverseValue", {"value": reverse_message})
         });
 
         socket.once("disconnect", function () {
